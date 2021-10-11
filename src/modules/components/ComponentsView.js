@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 
@@ -6,9 +6,12 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { colors, fonts } from '../../styles';
 
 import { Button, RadioGroup, Dropdown } from '../../components';
+import RazorpayCheckout from 'react-native-razorpay';
+import axios from 'axios';
 
 export default function ComponentsScreen(props) {
   const route = useRoute();
+  const [scheduleAppointmentData, setscheduleAppointmentData] = useState([]);
   return (
     <ScrollView
       style={styles.container}
@@ -52,14 +55,118 @@ export default function ComponentsScreen(props) {
           <Button
             style={[styles.demoButton, {flexBasis: '47%'}]}
             primary
-            caption="Button"
-            onPress={() => {}}
+            caption="Razor Pay Button"
+            onPress={() => {
+
+
+              let data = {
+                method: 'POST',
+                credentials: 'same-origin',
+                mode: 'same-origin',
+                body: JSON.stringify({
+                  "Amount": 100
+                  
+                }),
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                }
+
+              }
+              fetch("https://icactusapp.nethradhama.in/api/hms/createOrder/", data)
+                .then((response) => response.json())
+                .then((responseJson) => {
+                  console.log(" post ressss : "+responseJson.RazorpayOrderId);
+                 
+//
+var options = {
+  description: 'Tele Consulting',
+  image: 'https://vijayagroupofhospitals.org/VMETWebAPI/images/argon-logo-onboarding.png',
+  currency: 'INR',
+  key: 'rzp_test_Ot00FgJRMV3Kp6',
+  amount: '100',
+  name: 'VMET',
+  order_id: responseJson.RazorpayOrderId,//Replace this with an order_id created using Orders API.
+  prefill: {
+    email: 'smmari.18k@gmail.com',
+    contact: '9944259269',
+    name: 'Mari M'
+  },
+  theme: {color: '#53a20e'}
+}
+RazorpayCheckout.open(options).then((data) => {
+  // handle success
+  alert(`Success: ${data.razorpay_payment_id}`);
+}).catch((error) => {
+  // handle failure
+  alert(error.toString());
+  alert(`Error: ${error.code} | ${error.description}`);
+});
+//
+
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+          
+            
+
+
+
+              
+
+
+            }}
           />
           <Button
             style={[styles.demoButton, {flexBasis: '47%'}]}
             secondary
-            caption="Button"
-            onPress={() => {}}
+            caption="Call Post Method"
+            onPress={() => {
+              
+              let data = {
+                method: 'POST',
+                credentials: 'same-origin',
+                mode: 'same-origin',
+                body: JSON.stringify({
+                  "Amount": 100
+                  
+                }),
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                }
+
+              }
+              fetch("https://icactusapp.nethradhama.in/api/hms/createOrder/", data)
+                .then((response) => response.json())
+                .then((responseJson) => {
+                  console.log(" post ressss : "+responseJson.RazorpayOrderId);
+                  setscheduleAppointmentData(responseJson);
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+          
+            
+              
+              
+              /*
+              axios.post("https://icactusapp.nethradhama.in/api/hms/createOrder/",req).then
+              (
+                res=>{
+                  console.log(res.data.toString());
+                  // after validate Page Redirect to Home Page here..
+                  if(res.data.Active)
+                  {
+                    console.log(" RazorpayOrderId "+res.data.RazorpayOrderId);
+                  }
+                },
+                err=>{
+                  //console.log(err);
+                  console.log(err);
+                })*/
+            }}
           />
           <Button
             style={[styles.demoButton, {flexBasis: '47%'}]}

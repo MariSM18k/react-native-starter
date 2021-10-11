@@ -3,8 +3,8 @@
 buildscript {
     ext {
         buildToolsVersion = "28.0.3"
-        minSdkVersion = 16
-        compileSdkVersion = 28
+        minSdkVersion = 24
+        compileSdkVersion = 29
         targetSdkVersion = 28
     }
     repositories {
@@ -24,6 +24,9 @@ allprojects {
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url("$rootDir/../node_modules/react-native/android")
+        }
+        maven { // <---- Add this block
+            url "https://github.com/jitsi/jitsi-maven-repository/raw/master/releases"
         }
         maven {
             // Android JSC is installed from npm
